@@ -21,25 +21,10 @@ import ModernMagazineLayout
 
 struct ContentView: View {
     @StateObject private var dataService = MagazineDataService()
-    @State private var selectedTab = 0
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            AdvancedMagazineLayoutView()
-                .tabItem {
-                    Image(systemName: "rectangle.grid.2x2")
-                    Text("Magazine")
-                }
-                .tag(0)
-            
-            SettingsView()
-                .tabItem {
-                    Image(systemName: "gear")
-                    Text("Settings")
-                }
-                .tag(1)
-        }
-        .environmentObject(dataService)
+        AdvancedMagazineLayoutView()
+            .environmentObject(dataService)
     }
 }
 
@@ -73,15 +58,7 @@ struct AdvancedMagazineLayoutView: View {
             .navigationTitle("Advanced Magazine")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        showingSettings = true
-                    }) {
-                        Image(systemName: "gear")
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(action: {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             dataService.refreshData()
@@ -89,12 +66,19 @@ struct AdvancedMagazineLayoutView: View {
                     }) {
                         Image(systemName: "arrow.clockwise")
                     }
+                    
+                    Button(action: {
+                        showingSettings = true
+                    }) {
+                        Image(systemName: "gear")
+                    }
                 }
             }
             .refreshable {
                 dataService.refreshData()
             }
         }
+        .navigationViewStyle(.stack)
         .sheet(isPresented: $showingSettings) {
             SettingsView()
         }
@@ -155,7 +139,7 @@ struct SettingsView: View {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text("1.0.1")
                             .foregroundColor(DSColors.textSecondary)
                     }
                 }

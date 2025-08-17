@@ -24,7 +24,7 @@ struct PromotionCard: View {
     var body: some View {
         ZStack {
             AsyncImageView(url: promotion.backgroundImageURL)
-                .aspectRatio(2, contentMode: .fill)
+                .frame(height: 200)
                 .clipped()
                 .overlay(
                     LinearGradient(

@@ -24,7 +24,7 @@ struct ArticleCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             AsyncImageView(url: article.imageURL)
-                .aspectRatio(16/9, contentMode: .fill)
+                .frame(height: 160)
                 .clipped()
                 .overlay(
                     LinearGradient(
@@ -130,18 +130,47 @@ struct AsyncImageView: View {
     
     var body: some View {
         if let url = url {
-            AsyncImage(url: url) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(DSColors.backgroundSecondary)
-                    .overlay(
-                        Image(systemName: "photo")
-                            .foregroundColor(DSColors.textTertiary)
-                            .font(.title2)
-                    )
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                case .failure(_):
+                    Rectangle()
+                        .fill(DSColors.backgroundSecondary)
+                        .overlay(
+                            VStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.triangle")
+                                    .foregroundColor(DSColors.textTertiary)
+                                    .font(.title3)
+                                Text("Failed to load")
+                                    .font(.caption2)
+                                    .foregroundColor(DSColors.textTertiary)
+                            }
+                        )
+                case .empty:
+                    Rectangle()
+                        .fill(DSColors.backgroundSecondary)
+                        .overlay(
+                            VStack(spacing: 4) {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                Text("Loading...")
+                                    .font(.caption2)
+                                    .foregroundColor(DSColors.textTertiary)
+                            }
+                        )
+                @unknown default:
+                    Rectangle()
+                        .fill(DSColors.backgroundSecondary)
+                        .overlay(
+                            Image(systemName: "photo")
+                                .foregroundColor(DSColors.textTertiary)
+                                .font(.title2)
+                        )
+                }
             }
         } else {
             Rectangle()

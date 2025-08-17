@@ -20,26 +20,26 @@ import SwiftUI
 
 struct DSColors {
     
-    static let primary = Color("Primary")
-    static let secondary = Color("Secondary")
-    static let accent = Color("Accent")
+    static let primary = Color.blue
+    static let secondary = Color.gray
+    static let accent = Color.blue
     
-    static let backgroundPrimary = Color("BackgroundPrimary")
-    static let backgroundSecondary = Color("BackgroundSecondary")
-    static let backgroundTertiary = Color("BackgroundTertiary")
+    static let backgroundPrimary = Color(.systemBackground)
+    static let backgroundSecondary = Color(.secondarySystemBackground)
+    static let backgroundTertiary = Color(.tertiarySystemBackground)
     
-    static let textPrimary = Color("TextPrimary")
-    static let textSecondary = Color("TextSecondary")
-    static let textTertiary = Color("TextTertiary")
+    static let textPrimary = Color(.label)
+    static let textSecondary = Color(.secondaryLabel)
+    static let textTertiary = Color(.tertiaryLabel)
     
-    static let success = Color("Success")
-    static let warning = Color("Warning")
-    static let error = Color("Error")
-    static let info = Color("Info")
+    static let success = Color.green
+    static let warning = Color.orange
+    static let error = Color.red
+    static let info = Color.blue
     
-    static let cardBackground = Color("CardBackground")
-    static let cardBorder = Color("CardBorder")
-    static let cardShadow = Color("CardShadow")
+    static let cardBackground = Color(.systemBackground)
+    static let cardBorder = Color(.separator)
+    static let cardShadow = Color.black.opacity(0.1)
     
     static let gradient = LinearGradient(
         colors: [primary, accent],
@@ -71,12 +71,3 @@ struct DSColors {
     ]
 }
 
-extension Color {
-    init(_ name: String) {
-        if let uiColor = UIColor(named: name) {
-            self.init(uiColor)
-        } else {
-            self.init(.label)
-        }
-    }
-}

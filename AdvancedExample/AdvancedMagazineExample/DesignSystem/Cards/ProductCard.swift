@@ -24,7 +24,7 @@ struct ProductCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             AsyncImageView(url: product.imageURL)
-                .aspectRatio(1, contentMode: .fill)
+                .frame(height: 120)
                 .clipped()
                 .overlay(
                     VStack {
@@ -67,8 +67,11 @@ struct ProductCard: View {
                         .fontWeight(.semibold)
                     
                     Spacer()
-                    
+                }
+                
+                HStack {
                     RatingView(rating: product.rating, reviewCount: product.reviewCount)
+                    Spacer()
                 }
             }
             .padding(.horizontal, 8)
