@@ -1,0 +1,2 @@
+--disable preferKeyPath, wrapMultilineStatementBraces
+--exclude ".build", "DerivedData", "**/Mocks", "**/Package.swift"
