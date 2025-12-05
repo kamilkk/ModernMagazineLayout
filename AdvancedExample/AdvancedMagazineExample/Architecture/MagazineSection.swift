@@ -22,7 +22,7 @@ import SwiftUI
 struct MagazineSection: Identifiable {
   let id = UUID()
   let title: String?
-  let items: [MagazineItemConfigurator]
+  let items: [any MagazineItemConfigurator]
   let configuration: SectionConfiguration
 
   struct SectionConfiguration {
