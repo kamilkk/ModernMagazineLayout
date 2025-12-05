@@ -22,7 +22,7 @@ import SwiftUI
 struct AdvancedMagazineView: View {
   let sections: [MagazineSection]
   let configuration: ModernMagazineLayout.Configuration
-  let selection: MagazineSelection<UUID>?
+  var selection: MagazineSelection<UUID>?
   let onSectionHeaderTapped: ((Int) -> Void)?
   let onSectionFooterTapped: ((Int) -> Void)?
 
@@ -41,6 +41,9 @@ struct AdvancedMagazineView: View {
   }
 
   var body: some View {
+    let _ = selection?.isSelectionMode // Force view update when selection mode changes
+    let _ = selection?.selectedItems.count // Force view update when selection changes
+
     ScrollView {
       LazyVStack(spacing: 0) {
         ForEach(Array(sections.enumerated()), id: \.element.id) { sectionIndex, section in
@@ -75,6 +78,7 @@ struct AdvancedMagazineView: View {
       }
     }
     .background(DSColors.backgroundPrimary)
+    .environment(\.magazineSelection, selection)
   }
 
   @ViewBuilder
@@ -96,7 +100,6 @@ struct AdvancedMagazineView: View {
         }
       }
     }
-    .environment(\.magazineSelection, selection)
   }
 
   private func getAccessibilityLabel(for item: MagazineItemConfigurator) -> String {

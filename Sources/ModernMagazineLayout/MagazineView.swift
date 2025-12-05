@@ -100,8 +100,12 @@ public struct MagazineItem<Content: View>: View {
         }
       }
       .contentShape(Rectangle())
-      .onTapGesture {
-        handleTap()
+      .if(selection?.isSelectionMode == true) { view in
+        view.highPriorityGesture(
+          TapGesture().onEnded { _ in
+            handleTap()
+          }
+        )
       }
       .if(shouldEnableDragging) { view in
         view.draggable(draggableItem)
@@ -178,7 +182,9 @@ public struct MagazineItem<Content: View>: View {
   }
 
   private func handleTap() {
+    print("🔵 MagazineItem tap: itemId=\(String(describing: itemId)), hasSelection=\(selection != nil), isSelectionMode=\(selection?.isSelectionMode ?? false)")
     guard let itemId, let selection, selection.isSelectionMode else { return }
+    print("🟢 Toggling selection for itemId: \(itemId)")
     selection.toggle(itemId)
   }
 
