@@ -43,10 +43,10 @@ class MagazineDataService {
     loadInitialData()
   }
 
-  func addItemToSection(_ item: MagazineItemConfigurator, sectionIndex: Int) {
+  func addItemToSection(_ item: any MagazineItemConfigurator, sectionIndex: Int) {
     guard sectionIndex < sections.count else { return }
 
-    var section = sections[sectionIndex]
+    let section = sections[sectionIndex]
     var items = section.items
     items.append(item)
 
@@ -60,7 +60,7 @@ class MagazineDataService {
   func removeItem(withId id: UUID, fromSectionIndex sectionIndex: Int) {
     guard sectionIndex < sections.count else { return }
 
-    var section = sections[sectionIndex]
+    let section = sections[sectionIndex]
     var items = section.items
     items.removeAll { $0.id == id }
 

@@ -102,7 +102,7 @@ struct AdvancedMagazineView: View {
     }
   }
 
-  private func getAccessibilityLabel(for item: MagazineItemConfigurator) -> String {
+  private func getAccessibilityLabel(for item: any MagazineItemConfigurator) -> String {
     // Try to extract a meaningful label from the item
     switch item {
     case let articleItem as ArticleItemConfigurator:
@@ -116,14 +116,14 @@ struct AdvancedMagazineView: View {
     }
   }
 
-  private func trackItemImpression(item: MagazineItemConfigurator, section: Int) {
+  private func trackItemImpression(item: any MagazineItemConfigurator, section: Int) {
     // Analytics tracking
     print("Item impression: Section \(section), ID: \(item.id)")
   }
 }
 
 enum MagazineLayoutManager {
-  static func calculateOptimalLayout(for items: [MagazineItemConfigurator], containerWidth _: CGFloat) -> [MagazineItemConfigurator] {
+  static func calculateOptimalLayout(for items: [any MagazineItemConfigurator], containerWidth _: CGFloat) -> [any MagazineItemConfigurator] {
     return items.sorted { item1, item2 in
       if item1.priority != item2.priority {
         return item1.priority < item2.priority
@@ -132,7 +132,7 @@ enum MagazineLayoutManager {
     }
   }
 
-  static func adaptLayoutForAccessibility(_ items: [MagazineItemConfigurator]) -> [MagazineItemConfigurator] {
+  static func adaptLayoutForAccessibility(_ items: [any MagazineItemConfigurator]) -> [any MagazineItemConfigurator] {
     return items.map { item in
       if UIAccessibility.isVoiceOverRunning {
         return createAccessibleVersion(of: item)
@@ -141,7 +141,7 @@ enum MagazineLayoutManager {
     }
   }
 
-  private static func createAccessibleVersion(of item: MagazineItemConfigurator) -> MagazineItemConfigurator {
+  private static func createAccessibleVersion(of item: any MagazineItemConfigurator) -> any MagazineItemConfigurator {
     switch item {
     case let articleItem as ArticleItemConfigurator:
       return ArticleItemConfigurator(
