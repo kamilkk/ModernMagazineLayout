@@ -1,0 +1,9 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: swiftformat
+        name: SwiftFormat
+        entry: swiftformat
+        args: ['--quiet']
+        language: system
+        types: [swift]

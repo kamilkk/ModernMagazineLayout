@@ -1,0 +1,24 @@
+# Fastfile for ModernMagazineLayout
+# This file contains the fastlane configuration for building and testing the package
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build the ModernMagazineLayout Swift package"
+  lane :build do
+    UI.message("🔨 Building ModernMagazineLayout package...")
+
+    sh("swift", "build", "--configuration", "release")
+
+    UI.success("✅ Build completed successfully!")
+  end
+
+  desc "Build and execute tests for ModernMagazineLayout package"
+  lane :test do
+    UI.message("🧪 Running tests for ModernMagazineLayout package...")
+
+    sh("swift", "test", "--parallel")
+
+    UI.success("✅ All tests passed!")
+  end
+end

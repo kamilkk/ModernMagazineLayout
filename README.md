@@ -8,7 +8,7 @@ A SwiftUI implementation inspired by Airbnb's MagazineLayout, providing flexible
 - ✅ **Dynamic Height**: Automatic height calculation based on content
 - ✅ **Section Support**: Organize content into logical sections
 - ✅ **SwiftUI Native**: Built with modern SwiftUI Layout protocol
-- ✅ **iOS 17+**: Takes advantage of latest SwiftUI features
+- ✅ **iOS 18+**: Takes advantage of latest SwiftUI features
 - ✅ **Configurable Spacing**: Customizable horizontal, vertical, and section spacing
 - ✅ **Design System Integration**: Complete design system with reusable components
 - ✅ **Advanced Architecture**: Configurator pattern inspired by professional iOS apps
@@ -21,7 +21,7 @@ Add the following to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yourusername/ModernMagazineLayout.git", from: "1.0.1")
+    .package(url: "https://github.com/kamilkk/ModernMagazineLayout.git", from: "1.1.0")
 ]
 ```
 
@@ -275,9 +275,9 @@ enum MagazineWidthMode {
 
 ## Requirements
 
-- iOS 17.0+ / macOS 14.0+
-- Xcode 15.0+
-- Swift 5.9+
+- iOS 18.0+ / macOS 15.0+
+- Xcode 16.0+
+- Swift 6.0+
 
 ## Migration from UIKit MagazineLayout
 
