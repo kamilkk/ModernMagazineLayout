@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 //
 //  Package.swift
@@ -23,8 +23,8 @@ import PackageDescription
 let package = Package(
     name: "ModernMagazineLayout",
     platforms: [
-        .iOS(.v17),
-        .macOS(.v14)
+        .iOS(.v18),
+        .macOS(.v15)
     ],
     products: [
         .library(
@@ -33,9 +33,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ModernMagazineLayout"),
+            name: "ModernMagazineLayout",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableExperimentalFeature("AccessLevelOnImport")
+            ]
+        ),
         .testTarget(
             name: "ModernMagazineLayoutTests",
-            dependencies: ["ModernMagazineLayout"]),
+            dependencies: ["ModernMagazineLayout"],
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency")
+            ]
+        ),
     ]
 )

@@ -20,9 +20,9 @@ import SwiftUI
 
 @main
 struct AdvancedMagazineExampleApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+  }
 }

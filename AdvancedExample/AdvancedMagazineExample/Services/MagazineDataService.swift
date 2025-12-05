@@ -17,194 +17,193 @@
 //
 
 import Foundation
-import Combine
 import ModernMagazineLayout
 
-class MagazineDataService: ObservableObject {
-    @Published var sections: [MagazineSection] = []
-    @Published var isLoading = false
-    @Published var error: Error?
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init() {
-        loadInitialData()
+@Observable
+@MainActor
+class MagazineDataService {
+  var sections: [MagazineSection] = []
+  var isLoading = false
+  var error: Error?
+
+  init() {
+    loadInitialData()
+  }
+
+  func loadInitialData() {
+    isLoading = true
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      self.sections = self.generateSampleSections()
+      self.isLoading = false
     }
-    
-    func loadInitialData() {
-        isLoading = true
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.sections = self.generateSampleSections()
-            self.isLoading = false
-        }
-    }
-    
-    func refreshData() {
-        loadInitialData()
-    }
-    
-    func addItemToSection(_ item: MagazineItemConfigurator, sectionIndex: Int) {
-        guard sectionIndex < sections.count else { return }
-        
-        var section = sections[sectionIndex]
-        var items = section.items
-        items.append(item)
-        
-        sections[sectionIndex] = MagazineSection(
-            title: section.title,
-            items: items,
-            configuration: section.configuration
-        )
-    }
-    
-    func removeItem(withId id: UUID, fromSectionIndex sectionIndex: Int) {
-        guard sectionIndex < sections.count else { return }
-        
-        var section = sections[sectionIndex]
-        var items = section.items
-        items.removeAll { $0.id == id }
-        
-        sections[sectionIndex] = MagazineSection(
-            title: section.title,
-            items: items,
-            configuration: section.configuration
-        )
-    }
-    
-    func updateSectionConfiguration(_ configuration: MagazineSection.SectionConfiguration, forSectionIndex index: Int) {
-        guard index < sections.count else { return }
-        
-        let section = sections[index]
-        sections[index] = MagazineSection(
-            title: section.title,
-            items: section.items,
-            configuration: configuration
-        )
-    }
+  }
+
+  func refreshData() {
+    loadInitialData()
+  }
+
+  func addItemToSection(_ item: MagazineItemConfigurator, sectionIndex: Int) {
+    guard sectionIndex < sections.count else { return }
+
+    var section = sections[sectionIndex]
+    var items = section.items
+    items.append(item)
+
+    sections[sectionIndex] = MagazineSection(
+      title: section.title,
+      items: items,
+      configuration: section.configuration
+    )
+  }
+
+  func removeItem(withId id: UUID, fromSectionIndex sectionIndex: Int) {
+    guard sectionIndex < sections.count else { return }
+
+    var section = sections[sectionIndex]
+    var items = section.items
+    items.removeAll { $0.id == id }
+
+    sections[sectionIndex] = MagazineSection(
+      title: section.title,
+      items: items,
+      configuration: section.configuration
+    )
+  }
+
+  func updateSectionConfiguration(_ configuration: MagazineSection.SectionConfiguration, forSectionIndex index: Int) {
+    guard index < sections.count else { return }
+
+    let section = sections[index]
+    sections[index] = MagazineSection(
+      title: section.title,
+      items: section.items,
+      configuration: configuration
+    )
+  }
 }
 
 extension MagazineDataService {
-    private func generateSampleSections() -> [MagazineSection] {
-        return [
-            createFeaturedSection(),
-            createNewsSection(),
-            createProductsSection(),
-            createPromotionsSection(),
-            createLifestyleSection()
-        ]
+  private func generateSampleSections() -> [MagazineSection] {
+    return [
+      createFeaturedSection(),
+      createNewsSection(),
+      createProductsSection(),
+      createPromotionsSection(),
+      createLifestyleSection(),
+    ]
+  }
+
+  private func createFeaturedSection() -> MagazineSection {
+    let articles = SampleData.generateFeaturedArticles()
+    let items = articles.map { article in
+      ArticleItemConfigurator(
+        article: article,
+        widthMode: .fullWidth,
+        priority: 1
+      )
     }
-    
-    private func createFeaturedSection() -> MagazineSection {
-        let articles = SampleData.generateFeaturedArticles()
-        let items = articles.map { article in
-            ArticleItemConfigurator(
-                article: article,
-                widthMode: .fullWidth,
-                priority: 1
-            )
-        }
-        
-        return MagazineSection(
-            title: "Featured Stories",
-            items: items,
-            configuration: MagazineSection.SectionConfiguration(
-                showHeader: true,
-                showFooter: false,
-                showBackground: true,
-                headerStyle: .large,
-                backgroundColor: DSColors.backgroundSecondary,
-                spacing: 20
-            )
-        )
+
+    return MagazineSection(
+      title: "Featured Stories",
+      items: items,
+      configuration: MagazineSection.SectionConfiguration(
+        showHeader: true,
+        showFooter: false,
+        showBackground: true,
+        headerStyle: .large,
+        backgroundColor: DSColors.backgroundSecondary,
+        spacing: 20
+      )
+    )
+  }
+
+  private func createNewsSection() -> MagazineSection {
+    let articles = SampleData.generateNewsArticles()
+    let items = articles.enumerated().map { index, article in
+      ArticleItemConfigurator(
+        article: article,
+        widthMode: index == 0 ? .fullWidth : .halfWidth,
+        priority: index == 0 ? 1 : 2
+      )
     }
-    
-    private func createNewsSection() -> MagazineSection {
-        let articles = SampleData.generateNewsArticles()
-        let items = articles.enumerated().map { index, article in
-            ArticleItemConfigurator(
-                article: article,
-                widthMode: index == 0 ? .fullWidth : .halfWidth,
-                priority: index == 0 ? 1 : 2
-            )
-        }
-        
-        return MagazineSection(
-            title: "Latest News",
-            items: items,
-            configuration: .default
-        )
+
+    return MagazineSection(
+      title: "Latest News",
+      items: items,
+      configuration: .default
+    )
+  }
+
+  private func createProductsSection() -> MagazineSection {
+    let products = SampleData.generateProducts()
+    let items = products.map { product in
+      ProductItemConfigurator(
+        product: product,
+        widthMode: .thirdWidth,
+        priority: 3
+      )
     }
-    
-    private func createProductsSection() -> MagazineSection {
-        let products = SampleData.generateProducts()
-        let items = products.map { product in
-            ProductItemConfigurator(
-                product: product,
-                widthMode: .thirdWidth,
-                priority: 3
-            )
-        }
-        
-        return MagazineSection(
-            title: "Trending Products",
-            items: items,
-            configuration: MagazineSection.SectionConfiguration(
-                showHeader: true,
-                showFooter: true,
-                showBackground: false,
-                headerStyle: .medium,
-                backgroundColor: DSColors.backgroundPrimary,
-                spacing: 12
-            )
-        )
+
+    return MagazineSection(
+      title: "Trending Products",
+      items: items,
+      configuration: MagazineSection.SectionConfiguration(
+        showHeader: true,
+        showFooter: true,
+        showBackground: false,
+        headerStyle: .medium,
+        backgroundColor: DSColors.backgroundPrimary,
+        spacing: 12
+      )
+    )
+  }
+
+  private func createPromotionsSection() -> MagazineSection {
+    let promotions = SampleData.generatePromotions()
+    let items = promotions.map { promotion in
+      PromotionItemConfigurator(
+        promotion: promotion,
+        widthMode: .fullWidth,
+        priority: 1
+      )
     }
-    
-    private func createPromotionsSection() -> MagazineSection {
-        let promotions = SampleData.generatePromotions()
-        let items = promotions.map { promotion in
-            PromotionItemConfigurator(
-                promotion: promotion,
-                widthMode: .fullWidth,
-                priority: 1
-            )
-        }
-        
-        return MagazineSection(
-            title: nil,
-            items: items,
-            configuration: MagazineSection.SectionConfiguration(
-                showHeader: false,
-                showFooter: false,
-                showBackground: false,
-                headerStyle: .medium,
-                backgroundColor: DSColors.backgroundPrimary,
-                spacing: 16
-            )
-        )
+
+    return MagazineSection(
+      title: nil,
+      items: items,
+      configuration: MagazineSection.SectionConfiguration(
+        showHeader: false,
+        showFooter: false,
+        showBackground: false,
+        headerStyle: .medium,
+        backgroundColor: DSColors.backgroundPrimary,
+        spacing: 16
+      )
+    )
+  }
+
+  private func createLifestyleSection() -> MagazineSection {
+    let articles = SampleData.generateLifestyleArticles()
+    let items = articles.enumerated().map { index, article in
+      ArticleItemConfigurator(
+        article: article,
+        widthMode: index % 3 == 0 ? .fractional(0.6) : .fractional(0.4),
+        priority: index % 3 == 0 ? 1 : 2
+      )
     }
-    
-    private func createLifestyleSection() -> MagazineSection {
-        let articles = SampleData.generateLifestyleArticles()
-        let items = articles.enumerated().map { index, article in
-            ArticleItemConfigurator(
-                article: article,
-                widthMode: index % 3 == 0 ? .fractional(0.6) : .fractional(0.4),
-                priority: index % 3 == 0 ? 1 : 2
-            )
-        }
-        
-        return MagazineSection(
-            title: "Lifestyle",
-            items: items,
-            configuration: MagazineSection.SectionConfiguration(
-                showHeader: true,
-                showFooter: false,
-                showBackground: false,
-                headerStyle: .medium,
-                backgroundColor: DSColors.backgroundPrimary,
-                spacing: 16
-            )
-        )
-    }
+
+    return MagazineSection(
+      title: "Lifestyle",
+      items: items,
+      configuration: MagazineSection.SectionConfiguration(
+        showHeader: true,
+        showFooter: false,
+        showBackground: false,
+        headerStyle: .medium,
+        backgroundColor: DSColors.backgroundPrimary,
+        spacing: 16
+      )
+    )
+  }
 }
